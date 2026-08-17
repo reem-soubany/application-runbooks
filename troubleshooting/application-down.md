@@ -18,19 +18,19 @@ Steps to follow when an application is down or users are unable to access it.
 
 Make sure the user can reach the application server.
 
-Check:
+**Check the network:**
+* Open Command Prompt and run: `ping <server-name>`
 
-* Network connection
-* VPN connection if required
-* DNS
-* Required ports
-* Firewall rules
+**Check DNS:**
+* Run: `nslookup <server-name>`
+* Make sure the server name returns an IP address.
 
-For a quick connectivity test you can use:
-
-`Test-NetConnection <server> -Port <port>`
-
-If the connection fails, determine if the issue is with the application or the network before continuing.
+**Check the application port:**
+* Open PowerShell and run: `Test-NetConnection <server-name> -Port <port>`
+  * For example: `Test-NetConnection appserver01 -Port 443`
+* Look for: `TcpTestSucceeded : True`
+  * If it shows `False`, there may be a network or firewall issue.
+* If VPN is required, make sure the user is connected before testing.
 
 ### 2. Check Application Services
 
@@ -38,10 +38,10 @@ Log into the application server & check that the required services are running.
 
 If a service is stopped:
 
-1. Check when it stopped
-2. Review recent changes
-3. Restart the service if approved
-4. Test the application again
+* Check when it stopped
+* Review recent changes
+* Restart the service
+* Test the application again
 
 ### 3. Check Authentication
 
@@ -73,15 +73,21 @@ A dependency being unavailable can make the main application appear to be down.
 
 Review the application and Windows logs around the time the issue started.
 
-Look for:
+1. Press Windows + R
+2. Enter eventvwr
+3. Expand Windows Logs
+4. Select Application
+5. Check for errors or warnings around time issue started
+6. Check system for service or server-related errors
+7. Open the event & record the error message, event ID & timestamp
+
+List of what to look for:
 
 * Errors
 * Failed connections
 * Authentication failures
 * Service failures
 * Configuration changes
-
-Record the error message and timestamp if the issue needs to be escalated.
 
 ## Escalation
 
@@ -102,8 +108,6 @@ Include:
 
 * Confirm the application is accessible
 * Test login
-* Test the affected function
-* Confirm with the user if needed
-* Document the cause
-* Document the fix
+* Confirm with the user
+* Document the cause& the fix
 * Note any follow-up work
